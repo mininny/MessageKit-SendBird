@@ -24,8 +24,7 @@ struct User: SenderType {
         self.profileURL = URL(string: sendbirdUser?.profileUrl ?? "")
     }
     
-    func getAvatar(completionHandler: ((Avatar?)->Void)?) {
-        
+    func getAvatar(completionHandler: ((Avatar?) -> Void)?) {
         if let image = Self.imageCache.image(withIdentifier: self.senderId) {
             completionHandler?(Avatar(image: image, initials: self.displayName))
             return

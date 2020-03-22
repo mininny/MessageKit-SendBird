@@ -26,24 +26,24 @@ struct SendBirdMessage: MessageType {
         self.timestamp = timestamp
     }
     
-    init(with sendbirdMessage: SBDUserMessage?) {
-        let sender = sendbirdMessage?.sender ?? SBDSender()
+    init(with message: SBDBaseMessage?) {
+        switch message {
+        case let userMessage as SBDUserMessage:
+            self.kind = .text(userMessage.message ?? "")
+            self.user = User(with: userMessage.sender)
+        case let fileMessage as SBDFileMessage:
+            self.kind = .text("(\(fileMessage.type))")
+            self.user = User(with: fileMessage.sender)
+        case let adminMessage as SBDAdminMessage:
+            self.kind = .text(adminMessage.message ?? "")
+            self.user = User(with: nil)
+        default:
+            self.kind = .text("Unknown")
+            self.user = User(with: nil)
+        }
         
-        self.kind = .text(sendbirdMessage?.message ?? "")
-        self.user = User(with: sender)
-        self.messageId = "\(sendbirdMessage?.messageId)"
-        self.timestamp = sendbirdMessage?.createdAt ?? 0
-    }
-
-    init(with sendbirdMessage: SBDBaseMessage) {
-        self.init(with: sendbirdMessage as? SBDUserMessage)
-    }
-
-    init() {
-        self.kind = .text("")
-        self.user = User(with: nil)
-        self.messageId = ""
-        self.timestamp = 0
+        self.messageId = "\(String(describing: message?.messageId))"
+        self.timestamp = message?.createdAt ?? 0
     }
 }
 

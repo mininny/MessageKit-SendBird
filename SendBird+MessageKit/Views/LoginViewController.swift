@@ -45,6 +45,7 @@ class LoginViewController: UIViewController {
                     self?.resetButtonUI()
                 }
             }
+            
             guard user != nil, error == nil else { return }
             
             DispatchQueue.main.async { [weak self] in

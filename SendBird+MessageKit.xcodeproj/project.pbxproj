@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		527B48E22427BAB8005E89FF /* GroupChannelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527B48E12427BAB8005E89FF /* GroupChannelTableViewCell.swift */; };
 		52EFD5002424BE3D00D3E64C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EFD4FF2424BE3D00D3E64C /* AppDelegate.swift */; };
 		52EFD5022424BE3D00D3E64C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52EFD5012424BE3D00D3E64C /* SceneDelegate.swift */; };
 		52EFD5072424BE3D00D3E64C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52EFD5052424BE3D00D3E64C /* Main.storyboard */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		21AD2FB2141F7E795C1FA439 /* Pods_SendBird_MessageKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SendBird_MessageKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CDB60129A0E16C2C28ECECF /* Pods-SendBird+MessageKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SendBird+MessageKit.debug.xcconfig"; path = "Target Support Files/Pods-SendBird+MessageKit/Pods-SendBird+MessageKit.debug.xcconfig"; sourceTree = "<group>"; };
+		527B48E12427BAB8005E89FF /* GroupChannelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupChannelTableViewCell.swift; sourceTree = "<group>"; };
 		52EFD4FC2424BE3D00D3E64C /* SendBird+MessageKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SendBird+MessageKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		52EFD4FF2424BE3D00D3E64C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		52EFD5012424BE3D00D3E64C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +61,24 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		527B48E02427BAA2005E89FF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				52EFD5182425E67200D3E64C /* ChatViewController.swift */,
+				52EFD51A2425E68100D3E64C /* LoginViewController.swift */,
+				52EFD51C2425E68B00D3E64C /* ChannelsTableViewController.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		527B48E32427BAD0005E89FF /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				527B48E12427BAB8005E89FF /* GroupChannelTableViewCell.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		52EFD4F32424BE3D00D3E64C = {
 			isa = PBXGroup;
 			children = (
@@ -81,11 +101,10 @@
 			isa = PBXGroup;
 			children = (
 				52EFD4FF2424BE3D00D3E64C /* AppDelegate.swift */,
-				52EFD5132425147300D3E64C /* Models */,
 				52EFD5012424BE3D00D3E64C /* SceneDelegate.swift */,
-				52EFD5182425E67200D3E64C /* ChatViewController.swift */,
-				52EFD51A2425E68100D3E64C /* LoginViewController.swift */,
-				52EFD51C2425E68B00D3E64C /* ChannelsTableViewController.swift */,
+				527B48E32427BAD0005E89FF /* Components */,
+				52EFD5132425147300D3E64C /* Models */,
+				527B48E02427BAA2005E89FF /* Views */,
 				52EFD5052424BE3D00D3E64C /* Main.storyboard */,
 				52EFD5082424BE4400D3E64C /* Assets.xcassets */,
 				52EFD50A2424BE4400D3E64C /* LaunchScreen.storyboard */,
@@ -229,6 +248,7 @@
 				52EFD51B2425E68100D3E64C /* LoginViewController.swift in Sources */,
 				52EFD51D2425E68B00D3E64C /* ChannelsTableViewController.swift in Sources */,
 				52EFD5192425E67200D3E64C /* ChatViewController.swift in Sources */,
+				527B48E22427BAB8005E89FF /* GroupChannelTableViewCell.swift in Sources */,
 				52EFD5152425148300D3E64C /* Message.swift in Sources */,
 				52EFD5002424BE3D00D3E64C /* AppDelegate.swift in Sources */,
 				52EFD517242514EB00D3E64C /* User.swift in Sources */,
@@ -380,6 +400,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 53LJ95PWTP;
 				INFOPLIST_FILE = "SendBird+MessageKit/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -399,6 +420,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 53LJ95PWTP;
 				INFOPLIST_FILE = "SendBird+MessageKit/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

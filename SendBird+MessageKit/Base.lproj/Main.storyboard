@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="xXG-ls-rfW">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -13,11 +14,11 @@
             <objects>
                 <viewController id="xXG-ls-rfW" customClass="LoginViewController" customModule="SendBird_MessageKit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="apz-aQ-Tl3">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="User ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jw0-CM-W6N">
-                                <rect key="frame" x="40" y="425" width="334" height="56"/>
+                                <rect key="frame" x="40" y="404" width="334" height="56"/>
                                 <color key="backgroundColor" red="0.94117647059999998" green="0.94117647059999998" blue="0.94117647059999998" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="gAk-a6-Y5h"/>
@@ -28,13 +29,10 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                         <real key="value" value="4"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" red="0.4823529412" green="0.32549019610000002" blue="0.93725490199999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bf2-5m-5W0">
-                                <rect key="frame" x="40" y="497" width="334" height="60"/>
+                                <rect key="frame" x="40" y="476" width="334" height="60"/>
                                 <color key="backgroundColor" red="0.4823529412" green="0.32549019610000002" blue="0.93725490199999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="MPx-wQ-JaE"/>
@@ -53,14 +51,14 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SendBirdLogo" translatesAutoresizingMaskIntoConstraints="NO" id="UHf-Ia-10H">
-                                <rect key="frame" x="129" y="284" width="48" height="48"/>
+                                <rect key="frame" x="129" y="263" width="48" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="33w-az-sz0"/>
                                     <constraint firstAttribute="height" constant="48" id="uCN-C8-4tD"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SendBird + MessageKit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="D86-Bu-tso">
-                                <rect key="frame" x="79" y="356" width="256" height="29"/>
+                                <rect key="frame" x="79" y="335" width="256" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="iSh-7W-pws"/>
                                 </constraints>
@@ -69,7 +67,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MessageKitLogo" translatesAutoresizingMaskIntoConstraints="NO" id="hY2-3T-nHf">
-                                <rect key="frame" x="237" y="284" width="48" height="48"/>
+                                <rect key="frame" x="237" y="263" width="48" height="48"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="48" id="K1Y-je-urf"/>
                                     <constraint firstAttribute="height" constant="48" id="xkW-iu-3Ug"/>
@@ -105,10 +103,10 @@
             </objects>
             <point key="canvasLocation" x="-1075" y="228"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Channel List-->
         <scene sceneID="1kC-t1-9v2">
             <objects>
-                <navigationController id="qt4-4X-OnW" sceneMemberID="viewController">
+                <navigationController title="Channel List" id="qt4-4X-OnW" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="7HW-xU-VJb">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -137,13 +135,27 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5IO-0O-Ypc" userLabel="Cover Image Container View" customClass="ProfileImageView" customModule="SendBird_iOS" customModuleProvider="target">
+                                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5IO-0O-Ypc" userLabel="Cover Image Container View">
                                             <rect key="frame" x="10" y="12" width="56" height="56"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="oUO-QI-y29">
+                                                    <rect key="frame" x="0.0" y="0.0" width="56" height="56"/>
+                                                </imageView>
+                                            </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="56" id="2MO-lk-eib"/>
                                                 <constraint firstAttribute="height" constant="56" id="BCY-rf-QOS"/>
+                                                <constraint firstItem="oUO-QI-y29" firstAttribute="top" secondItem="5IO-0O-Ypc" secondAttribute="top" id="G2o-SM-ete"/>
+                                                <constraint firstItem="oUO-QI-y29" firstAttribute="leading" secondItem="5IO-0O-Ypc" secondAttribute="leading" id="Jky-FA-woQ"/>
+                                                <constraint firstAttribute="trailing" secondItem="oUO-QI-y29" secondAttribute="trailing" id="f2f-nh-xsb"/>
+                                                <constraint firstAttribute="bottom" secondItem="oUO-QI-y29" secondAttribute="bottom" id="rHs-mR-A0f"/>
                                             </constraints>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="28"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
                                         </view>
                                         <view contentMode="scaleToFill" horizontalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="Beq-Dw-CQP" userLabel="Member Count Container View">
                                             <rect key="frame" x="204.5" y="14" width="18" height="17"/>
@@ -151,11 +163,11 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qUx-nB-Fld" userLabel="Member Count Label">
                                                     <rect key="frame" x="5" y="1.5" width="8" height="14"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <color key="textColor" name="color_group_channel_member_count_label"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" name="color_group_channel_member_count_bg"/>
+                                            <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <constraints>
                                                 <constraint firstItem="qUx-nB-Fld" firstAttribute="leading" secondItem="Beq-Dw-CQP" secondAttribute="leading" constant="5" id="BK2-cW-0e6"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="18" id="Bhy-pn-VwS"/>
@@ -179,7 +191,8 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
-                                            <color key="backgroundColor" name="color_group_channel_unread_count_bg"/>
+                                            <color key="backgroundColor" red="0.4823529412" green="0.32549019610000002" blue="0.93725490199999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <color key="tintColor" red="0.4823529412" green="0.32549019610000002" blue="0.93725490199999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                             <constraints>
                                                 <constraint firstItem="EN9-Ha-u7V" firstAttribute="centerY" secondItem="jhJ-hf-8gv" secondAttribute="centerY" id="6e0-6S-GXZ"/>
                                                 <constraint firstAttribute="height" constant="19" id="Kcz-Qv-7Hr"/>
@@ -202,13 +215,12 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Channel Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LxV-hD-Zsc" userLabel="Channel Name Label">
                                             <rect key="frame" x="80" y="12" width="116.5" height="21"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
-                                            <color key="textColor" name="color_group_channel_name_label"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aav-uS-owV" userLabel="Last Message Label">
                                             <rect key="frame" x="80" y="33" width="282" height="18"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <color key="textColor" name="color_group_channel_last_message_label"/>
+                                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -234,8 +246,39 @@
                                     <outlet property="lastMessageLabel" destination="aav-uS-owV" id="0as-Ii-SgZ"/>
                                     <outlet property="lastUpdatedDateLabel" destination="Wt1-M5-3Ys" id="6kr-p7-j82"/>
                                     <outlet property="memberCountLabel" destination="qUx-nB-Fld" id="1dG-qu-k5R"/>
+                                    <outlet property="profileImageView" destination="oUO-QI-y29" id="Ggx-3V-pBC"/>
                                     <outlet property="unreadMessageCountLabel" destination="EN9-Ha-u7V" id="cNZ-94-l0t"/>
                                 </connections>
+                            </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="JoinPublicRoom" rowHeight="80" id="8OD-a4-8Cb">
+                                <rect key="frame" x="0.0" y="108" width="414" height="80"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="8OD-a4-8Cb" id="zxJ-R0-3Wi">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Join Public Room" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hd5-WN-Z6u">
+                                            <rect key="frame" x="107" y="10" width="200" height="60"/>
+                                            <color key="backgroundColor" red="0.4823529412" green="0.32549019610000002" blue="0.93725490199999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="60" id="7WF-Vm-9x2"/>
+                                                <constraint firstAttribute="width" constant="200" id="9Fm-Qc-G0q"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="20"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Hd5-WN-Z6u" firstAttribute="centerY" secondItem="zxJ-R0-3Wi" secondAttribute="centerY" id="aTI-k9-fWI"/>
+                                        <constraint firstItem="Hd5-WN-Z6u" firstAttribute="centerX" secondItem="zxJ-R0-3Wi" secondAttribute="centerX" id="rpd-tm-YVJ"/>
+                                    </constraints>
+                                </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -246,11 +289,12 @@
                     <navigationItem key="navigationItem" id="fNa-Vv-ink"/>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="ShowChat" id="6LS-8m-yc1"/>
+                        <segue destination="xXG-ls-rfW" kind="show" id="fye-sp-Z5V"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R2a-f6-g2y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-19" y="228"/>
+            <point key="canvasLocation" x="-20" y="318"/>
         </scene>
         <!--Chat View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -272,21 +316,6 @@
     <resources>
         <image name="MessageKitLogo" width="200" height="200"/>
         <image name="SendBirdLogo" width="48" height="48"/>
-        <namedColor name="color_group_channel_last_message_label">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="color_group_channel_member_count_bg">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="color_group_channel_member_count_label">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="color_group_channel_name_label">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="color_group_channel_unread_count_bg">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="color_group_channel_updated_at_label">
             <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

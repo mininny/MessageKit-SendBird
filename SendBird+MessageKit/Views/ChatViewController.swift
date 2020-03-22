@@ -12,24 +12,42 @@ import MessageKit
 import InputBarAccessoryView
 import Alamofire
 
-class ChatViewController: MessagesViewController{
-
+class ChatViewController: MessagesViewController {
+    
     let outgoingAvatarOverlap: CGFloat = 17.5
     
     var messages: [SendBirdMessage] = []
-    var channel: SBDGroupChannel?
+    var channel: SBDBaseChannel?
     
     var hasPrevious: Bool?
     var minMessageTimestamp: Int64 = Int64.max
-    var isLoading: Bool = false
+    var isLoading: Bool = false {
+        didSet {
+            if self.isLoading == false {
+                self.refreshControl.endRefreshing()
+            }
+        }
+    }
+    
+    var refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        self.title = channel?.name ?? "Channel"
+        
+        SBDMain.add(self, identifier: "ChannelDelegate")
         self.loadPreviousMessages(initial: true)
-
+        
         self.configureMessageCollectionView()
         self.messageInputBar.delegate = self
+        
+        refreshControl.addTarget(self, action: #selector(loadNewMessages), for: .valueChanged)
+        self.messagesCollectionView.refreshControl = refreshControl
+    }
+    
+    @objc func loadNewMessages() {
+        self.loadPreviousMessages(initial: false)
     }
     
     func configureMessageCollectionView() {
@@ -63,7 +81,7 @@ class ChatViewController: MessagesViewController{
     }
     
     func loadPreviousMessages(initial: Bool) {
-        if self.isLoading { return }
+        guard !self.isLoading else { return }
         self.isLoading = true
         
         var timestamp: Int64 = 0
@@ -75,94 +93,71 @@ class ChatViewController: MessagesViewController{
             timestamp = self.minMessageTimestamp
         }
         
-        if self.hasPrevious == false { return }
+        if self.hasPrevious == false {
+            self.isLoading = false
+            return
+        }
         
         guard let channel = self.channel else { return }
-        channel.getPreviousMessages(byTimestamp: timestamp, limit: 30, reverse: !initial, messageType: .all, customType: nil) { (msgs, error) in
-            if error != nil {
+        channel.getPreviousMessages(byTimestamp: timestamp, limit: 30, reverse: false, messageType: .all, customType: nil) { (msgs, error) in
+            defer {
                 self.isLoading = false
-                
+            }
+            
+            guard error == nil else { return }
+            guard let messages = msgs, messages.count > 0 else {
+                self.hasPrevious = false
                 return
             }
             
-            guard let messages = msgs else { return }
-            
-            if messages.count == 0 {
-                self.hasPrevious = false
-            }
-            
             if initial {
-                channel.markAsRead()
+                (channel as? SBDGroupChannel)?.markAsRead()
                 
-                    if messages.count > 0 {
-                        DispatchQueue.main.async {
-                            self.messages.removeAll()
-                            
-                            for message in messages.map({ SendBirdMessage(with: $0) }) {
-                                self.insertMessage(message)
-                                
-//                                if self.minMessageTimestamp > message.createdAt {
-//                                    self.minMessageTimestamp = message.createdAt
-//                                }
-                            }
-                            
-//                            if self.resendableMessages.count > 0 {
-//                                for message in self.resendableMessages.values {
-//                                    self.messages.append(message)
-//                                }
-//                            }
-//
-//                            self.initialLoading = true
-//
-//                            self.messageTableView.reloadData()
-//                            self.messageTableView.layoutIfNeeded()
-//
-//                            self.messageTableView.scrollToRow(at: IndexPath(row: messages.count-1, section: 0), at: .top, animated: false)
-//                            self.initialLoading = false
-                            self.isLoading = false
+                DispatchQueue.main.async {
+                    self.messages.removeAll()
+                    
+                    for message in messages.map({ SendBirdMessage(with: $0) }) {
+                        self.insertMessage(message, forceScroll: true)
+                        
+                        if self.minMessageTimestamp > message.timestamp {
+                            self.minMessageTimestamp = message.timestamp
                         }
                     }
-            }
-            else {
-                if messages.count > 0 {
-                    DispatchQueue.main.async {
-                        var messageIndexPaths: [IndexPath] = []
-                        var row: Int = 0
-                        for message in messages.map({ SendBirdMessage(with: $0) }) {
-                            self.insertMessage(message)
-                            
-//                            if self.minMessageTimestamp > message.createdAt {
-//                                self.minMessageTimestamp = message.createdAt
-//                            }
-                            
-//                            messageIndexPaths.append(IndexPath(row: row, section: 0))
-                            row += 1
-                        }
-//
-//                        self.messageTableView.reloadData()
-//                        self.messageTableView.layoutIfNeeded()
-//
-//                        self.messageTableView.scrollToRow(at: IndexPath(row: messages.count-1, section: 0), at: .top, animated: false)
-                        self.isLoading = false
+                }
+            } else {
+                DispatchQueue.main.async {
+                    let newMessages = messages.map({ SendBirdMessage(with: $0) })
+                    if let minTimestamp = newMessages.map({ $0.timestamp }).min(), self.minMessageTimestamp > minTimestamp {
+                        self.minMessageTimestamp = minTimestamp
                     }
+                    
+                    self.messages.insert(contentsOf: newMessages, at: 0)
+                    self.messagesCollectionView.reloadDataAndKeepOffset()
                 }
             }
         }
     }
     
-    func insertMessage(_ message: SendBirdMessage) {
+    func insertMessage(_ message: SendBirdMessage, forceScroll: Bool = false) {
         messages.append(message)
-        // Reload last section to update header/footer labels and insert a new one
+        
         messagesCollectionView.performBatchUpdates({
             messagesCollectionView.insertSections([messages.count - 1])
             if messages.count >= 2 {
                 messagesCollectionView.reloadSections([messages.count - 2])
             }
         }, completion: { [weak self] _ in
-//            if self?.isLastSectionVisible() == true {
-//                self?.messagesCollectionView.scrollToBottom(animated: true)
-//            }
+            if self?.isLastSectionVisible() == true || forceScroll {
+                self?.messagesCollectionView.scrollToBottom(animated: true)
+            }
         })
+    }
+    
+    func isLastSectionVisible() -> Bool {
+        guard !messages.isEmpty else { return false }
+        
+        let lastIndexPath = IndexPath(item: 0, section: messages.count - 1)
+        return messagesCollectionView.indexPathsForVisibleItems.contains(lastIndexPath)
     }
     
     func isPreviousMessageSameSender(at indexPath: IndexPath) -> Bool {
@@ -187,9 +182,7 @@ extension ChatViewController: MessagesDataSource {
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        guard let message = messages[indexPath.section] as? SendBirdMessage else { return SendBirdMessage()}
-        
-        return message
+        return messages[indexPath.section]
     }
     
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
@@ -210,7 +203,7 @@ extension ChatViewController: MessagesDataSource {
         }
         return nil
     }
-
+    
     func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         if !isNextMessageSameSender(at: indexPath) && isFromCurrentSender(message: message) {
             return NSAttributedString(string: "Delivered", attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
@@ -226,15 +219,15 @@ extension ChatViewController: MessagesLayoutDelegate, MessagesDisplayDelegate {
         }
         return 0
     }
-
+    
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         if isFromCurrentSender(message: message) {
             return !isPreviousMessageSameSender(at: indexPath) ? 20 : 0
         } else {
-            return 0 // !isPreviousMessageSameSender(at: indexPath) ? (20 + outgoingAvatarOverlap) : 0
+            return !isPreviousMessageSameSender(at: indexPath) ? (20 + outgoingAvatarOverlap) : 0
         }
     }
-
+    
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         return (!isNextMessageSameSender(at: indexPath) && isFromCurrentSender(message: message)) ? 16 : 0
     }
@@ -276,27 +269,21 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         self.channel?.sendUserMessage(text, completionHandler: { (userMessage, error) in
             DispatchQueue.main.async { [weak self] in
                 self?.messageInputBar.sendButton.stopAnimating()
-                self?.messageInputBar.inputTextView.placeholder = "Aa"
                 self?.insertMessages(userMessage)
                 self?.messagesCollectionView.scrollToBottom(animated: true)
+                self?.messageInputBar.inputTextView.placeholder = ""
             }
         })
     }
-    private func insertMessages(_ message: SBDUserMessage?) {
-        guard let userMessage = message else { return }
-        
-        let message = SendBirdMessage(with: userMessage)
+    
+    private func insertMessages(_ message: SBDBaseMessage?) {
+        let message = SendBirdMessage(with: message)
         self.insertMessage(message)
-//
-//        for component in data {
-//            let user = SampleData.shared.currentSender
-//            if let str = component as? String {
-//                let message = MockMessage(text: str, user: user, messageId: UUID().uuidString, date: Date())
-//                insertMessage(message)
-//            } else if let img = component as? UIImage {
-//                let message = MockMessage(image: img, user: user, messageId: UUID().uuidString, date: Date())
-//                insertMessage(message)
-//            }
-//        }
+    }
+}
+
+extension ChatViewController: SBDChannelDelegate {
+    func channel(_ sender: SBDBaseChannel, didReceive message: SBDBaseMessage) {
+        self.insertMessages(message)
     }
 }
