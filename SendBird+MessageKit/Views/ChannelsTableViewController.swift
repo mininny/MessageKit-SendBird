@@ -87,7 +87,6 @@ extension ChannelsTableViewController {
         }
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GroupChannelCell", for: indexPath) as? GroupChannelTableViewCell else { return UITableViewCell() }
-        
         cell.configure(with: channels[indexPath.row - 1])
         return cell
     }
@@ -121,7 +120,6 @@ extension ChannelsTableViewController {
                     self.performSegue(withIdentifier: "ShowChat", sender: channel?.first)
                 })
             })
-            return
         } else {
             performSegue(withIdentifier: "ShowChat", sender: self.channels[indexPath.row - 1])
         }

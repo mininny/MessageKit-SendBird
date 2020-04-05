@@ -20,7 +20,14 @@ class ChatViewController: MessagesViewController {
     var channel: SBDBaseChannel?
     
     var hasPrevious: Bool?
-    var minMessageTimestamp: Int64 = Int64.max
+    var minMessageTimestamp: Int64 = Int64.max {
+        didSet {
+            if oldValue < self.minMessageTimestamp {
+                self.minMessageTimestamp = oldValue
+            }
+        }
+    }
+    
     var isLoading: Bool = false {
         didSet {
             if self.isLoading == false {
@@ -40,22 +47,19 @@ class ChatViewController: MessagesViewController {
         self.loadPreviousMessages(initial: true)
         
         self.configureMessageCollectionView()
+        
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messagesDataSource = self
+        
         self.messageInputBar.delegate = self
         
-        refreshControl.addTarget(self, action: #selector(loadNewMessages), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(loadPreviousMessages(initial:)), for: .valueChanged)
         self.messagesCollectionView.refreshControl = refreshControl
     }
     
-    @objc func loadNewMessages() {
-        self.loadPreviousMessages(initial: false)
-    }
-    
     func configureMessageCollectionView() {
-        messagesCollectionView.messagesDataSource = self
 //        messagesCollectionView.messageCellDelegate = self
-        
-        scrollsToBottomOnKeyboardBeginsEditing = true // default false
-        maintainPositionOnKeyboardFrameChanged = true // default false
         
         let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
         layout?.sectionInset = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
@@ -75,12 +79,9 @@ class ChatViewController: MessagesViewController {
         layout?.setMessageIncomingAccessoryViewPosition(.messageBottom)
         layout?.setMessageOutgoingAccessoryViewSize(CGSize(width: 30, height: 30))
         layout?.setMessageOutgoingAccessoryViewPadding(HorizontalEdgeInsets(left: 0, right: 8))
-        
-        messagesCollectionView.messagesLayoutDelegate = self
-        messagesCollectionView.messagesDisplayDelegate = self
     }
     
-    func loadPreviousMessages(initial: Bool) {
+    @objc func loadPreviousMessages(initial: Bool = false) {
         guard !self.isLoading else { return }
         self.isLoading = true
         
@@ -98,8 +99,7 @@ class ChatViewController: MessagesViewController {
             return
         }
         
-        guard let channel = self.channel else { return }
-        channel.getPreviousMessages(byTimestamp: timestamp, limit: 30, reverse: false, messageType: .all, customType: nil) { (msgs, error) in
+        self.channel?.getPreviousMessages(byTimestamp: timestamp, limit: 30, reverse: false, messageType: .all, customType: nil) { msgs, error in
             defer {
                 self.isLoading = false
             }
@@ -111,25 +111,19 @@ class ChatViewController: MessagesViewController {
             }
             
             if initial {
-                (channel as? SBDGroupChannel)?.markAsRead()
+                (self.channel as? SBDGroupChannel)?.markAsRead()
                 
                 DispatchQueue.main.async {
                     self.messages.removeAll()
                     
-                    for message in messages.map({ SendBirdMessage(with: $0) }) {
-                        self.insertMessage(message, forceScroll: true)
-                        
-                        if self.minMessageTimestamp > message.timestamp {
-                            self.minMessageTimestamp = message.timestamp
-                        }
-                    }
+                    messages.forEach { self.insertMessage($0, forceScroll: true) }
+                    self.minMessageTimestamp = messages.map{ $0.createdAt }.min() ?? .max
                 }
             } else {
                 DispatchQueue.main.async {
                     let newMessages = messages.map({ SendBirdMessage(with: $0) })
-                    if let minTimestamp = newMessages.map({ $0.timestamp }).min(), self.minMessageTimestamp > minTimestamp {
-                        self.minMessageTimestamp = minTimestamp
-                    }
+                    
+                    self.minMessageTimestamp = newMessages.map({ $0.timestamp }).min() ?? .max
                     
                     self.messages.insert(contentsOf: newMessages, at: 0)
                     self.messagesCollectionView.reloadDataAndKeepOffset()
@@ -138,8 +132,10 @@ class ChatViewController: MessagesViewController {
         }
     }
     
-    func insertMessage(_ message: SendBirdMessage, forceScroll: Bool = false) {
-        messages.append(message)
+    func insertMessage(_ message: SBDBaseMessage?, forceScroll: Bool = false) {
+        let mkMessage = SendBirdMessage(with: message)
+        
+        messages.append(mkMessage)
         
         messagesCollectionView.performBatchUpdates({
             messagesCollectionView.insertSections([messages.count - 1])
@@ -214,10 +210,7 @@ extension ChatViewController: MessagesDataSource {
 
 extension ChatViewController: MessagesLayoutDelegate, MessagesDisplayDelegate {
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        if isTimeLabelVisible(at: indexPath) {
-            return 18
-        }
-        return 0
+        return isTimeLabelVisible(at: indexPath) ? 18 : 0
     }
     
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
@@ -269,21 +262,16 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         self.channel?.sendUserMessage(text, completionHandler: { (userMessage, error) in
             DispatchQueue.main.async { [weak self] in
                 self?.messageInputBar.sendButton.stopAnimating()
-                self?.insertMessages(userMessage)
+                self?.insertMessage(userMessage)
                 self?.messagesCollectionView.scrollToBottom(animated: true)
                 self?.messageInputBar.inputTextView.placeholder = ""
             }
         })
     }
-    
-    private func insertMessages(_ message: SBDBaseMessage?) {
-        let message = SendBirdMessage(with: message)
-        self.insertMessage(message)
-    }
 }
 
 extension ChatViewController: SBDChannelDelegate {
     func channel(_ sender: SBDBaseChannel, didReceive message: SBDBaseMessage) {
-        self.insertMessages(message)
+        self.insertMessage(message)
     }
 }

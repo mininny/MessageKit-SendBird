@@ -32,13 +32,10 @@ class LoginViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destination = segue.destination as? UINavigationController {
-            destination.modalPresentationStyle = .fullScreen
-        }
+        segue.destination.modalPresentationStyle = .fullScreen
     }
     
     func signIn(userId: String) {
-        // MARK: SendBirdCall.authenticate()
         SBDMain.connect(withUserId: userId) { (user, error) in
             defer {
                 DispatchQueue.main.async { [weak self] in
