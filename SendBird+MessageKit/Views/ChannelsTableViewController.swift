@@ -12,7 +12,14 @@ import SendBirdSDK
 class ChannelsTableViewController: UITableViewController {
     
     var channels: [SBDGroupChannel] = []
-    var channelListQuery: SBDGroupChannelListQuery?
+    lazy var channelListQuery: SBDGroupChannelListQuery? = {
+        let channelListQuery = SBDGroupChannel.createMyGroupChannelListQuery()
+        channelListQuery?.order = .latestLastMessage
+        channelListQuery?.limit = 20
+        channelListQuery?.includeEmptyChannel = true
+        
+        return channelListQuery
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +32,7 @@ class ChannelsTableViewController: UITableViewController {
         
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.largeTitleDisplayMode = .always
-        self.loadChannelListNextPage(false)
+        self.loadChannelListNextPage()
     }
     
     @objc func signOut() {
@@ -40,43 +47,26 @@ class ChannelsTableViewController: UITableViewController {
         }
     }
     
-    func loadChannelListNextPage(_ refresh: Bool) {
-        if refresh {
-            self.channelListQuery = nil
-        }
-        
-        if self.channelListQuery == nil {
-            self.channelListQuery = SBDGroupChannel.createMyGroupChannelListQuery()
-            self.channelListQuery?.order = .latestLastMessage
-            self.channelListQuery?.limit = 20
-            self.channelListQuery?.includeEmptyChannel = true
-        }
-        
+    func loadChannelListNextPage() {
         if self.channelListQuery?.hasNext == false {
             return
         }
         
         self.channelListQuery?.loadNextPage(completionHandler: { (channels, error) in
-            if error != nil {
+            defer {
                 DispatchQueue.main.async {
                     self.refreshControl?.endRefreshing()
                 }
-                
-                return
             }
             
+            guard error == nil else { return }
+            
             DispatchQueue.main.async {
-                if refresh {
-                    self.channels.removeAll()
-                }
-                
                 self.channels += channels!
                 self.tableView.reloadData()
-                self.refreshControl?.endRefreshing()
             }
         })
     }
-    
 }
 
 extension ChannelsTableViewController {

@@ -59,8 +59,6 @@ class ChatViewController: MessagesViewController {
     }
     
     func configureMessageCollectionView() {
-//        messagesCollectionView.messageCellDelegate = self
-        
         let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
         layout?.sectionInset = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
         
@@ -135,12 +133,12 @@ class ChatViewController: MessagesViewController {
     func insertMessage(_ message: SBDBaseMessage?, forceScroll: Bool = false) {
         let mkMessage = SendBirdMessage(with: message)
         
-        messages.append(mkMessage)
+        self.messages.append(mkMessage)
         
-        messagesCollectionView.performBatchUpdates({
-            messagesCollectionView.insertSections([messages.count - 1])
-            if messages.count >= 2 {
-                messagesCollectionView.reloadSections([messages.count - 2])
+        self.messagesCollectionView.performBatchUpdates({
+            self.messagesCollectionView.insertSections([messages.count - 1])
+            if self.messages.count >= 2 {
+                self.messagesCollectionView.reloadSections([messages.count - 2])
             }
         }, completion: { [weak self] _ in
             if self?.isLastSectionVisible() == true || forceScroll {
@@ -150,10 +148,10 @@ class ChatViewController: MessagesViewController {
     }
     
     func isLastSectionVisible() -> Bool {
-        guard !messages.isEmpty else { return false }
+        guard !self.messages.isEmpty else { return false }
         
         let lastIndexPath = IndexPath(item: 0, section: messages.count - 1)
-        return messagesCollectionView.indexPathsForVisibleItems.contains(lastIndexPath)
+        return self.messagesCollectionView.indexPathsForVisibleItems.contains(lastIndexPath)
     }
     
     func isPreviousMessageSameSender(at indexPath: IndexPath) -> Bool {
@@ -167,7 +165,7 @@ class ChatViewController: MessagesViewController {
     }
     
     func isTimeLabelVisible(at indexPath: IndexPath) -> Bool {
-        return indexPath.section % 3 == 0 && !isPreviousMessageSameSender(at: indexPath)
+        return indexPath.section % 3 == 0 && !self.isPreviousMessageSameSender(at: indexPath)
     }
 }
 
@@ -229,9 +227,9 @@ extension ChatViewController: MessagesLayoutDelegate, MessagesDisplayDelegate {
         guard let sender = message.sender as? User else { return }
         
         sender.getAvatar { [weak self] avatar in
-            guard let self = self else { return }
+            guard let self = self,
+                let avatar = avatar else { return }
             DispatchQueue.main.async {
-                guard let avatar = avatar else { return }
                 avatarView.set(avatar: avatar)
                 avatarView.isHidden = self.isNextMessageSameSender(at: indexPath)
                 avatarView.layer.borderWidth = 2
@@ -249,7 +247,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
             
             let substring = attributedText.attributedSubstring(from: range)
             let context = substring.attribute(.autocompletedContext, at: 0, effectiveRange: nil)
-            print("Autocompleted: `", substring, "` with context: ", context ?? [])
+            print("Autocompleted: `\(substring)` with context: \(context ?? [])")
         }
         
         messageInputBar.inputTextView.text = String()

@@ -21,9 +21,7 @@ class GroupChannelTableViewCell: UITableViewCell {
     
     func configure(with channel: SBDGroupChannel) {
         if channel.name == "Group Channel" {
-            self.channelNameLabel.text = channel.members?.map({ $0 as? SBDMember }).reduce(into: "", {
-                $0 += $1?.userId ?? ""
-            })
+            self.channelNameLabel.text = channel.members?.compactMap({ ($0 as? SBDMember)?.userId }).joined(separator: ", ")
         } else {
             self.channelNameLabel.text = channel.name
         }
